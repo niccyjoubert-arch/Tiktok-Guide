@@ -1,0 +1,395 @@
+import React, { useState } from 'react';
+import { Camera, Mic, Sun, UserCheck, MessageSquare, Sparkles, Smartphone, CheckCircle, Lightbulb, Image as ImageIcon, Heart, Target, Brain, Camera as CameraIcon, ShieldCheck, Zap, ArrowRight } from 'lucide-react';
+
+// --- Brand Components from Kit ---
+
+const BackgroundOrbs = React.memo(() => (
+  <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-slate-50 transform-gpu">
+    <style>{`
+      @keyframes float {
+        0%, 100% { transform: translate(0, 0); }
+        50% { transform: translate(20px, -20px); }
+      }
+      @keyframes shimmer {
+        0% { background-position: 200% center; }
+        100% { background-position: -200% center; }
+      }
+      .orb-1 { animation: float 15s ease-in-out infinite; }
+      .orb-2 { animation: float 18s ease-in-out infinite; }
+      .orb-3 { animation: float 20s ease-in-out infinite; }
+      .animate-shimmer {
+        background-size: 200% auto;
+        animation: shimmer 8s linear infinite;
+      }
+      .shimmer-text {
+        background: linear-gradient(90deg, #191919 0%, #a855f7 50%, #191919 100%);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shimmer 5s linear infinite;
+      }
+    `}</style>
+    
+    <div className="orb-1 absolute top-[-10%] right-[-10%] w-[300px] md:w-[800px] h-[300px] md:h-[800px] bg-cyan-400/20 rounded-full blur-[80px] md:blur-[100px] mix-blend-multiply will-change-transform"></div>
+    <div className="orb-2 absolute bottom-[-10%] left-[-10%] w-[250px] md:w-[600px] h-[250px] md:h-[600px] bg-pink-400/20 rounded-full blur-[80px] md:blur-[100px] mix-blend-multiply will-change-transform"></div>
+    <div className="orb-3 absolute top-[30%] left-[20%] w-[200px] md:w-[500px] h-[200px] md:h-[500px] bg-purple-400/20 rounded-full blur-[80px] md:blur-[100px] mix-blend-multiply will-change-transform"></div>
+  </div>
+));
+
+const LiquidCard = ({ children, className = "", isDark = false, hoverEffect = true }) => {
+  return (
+    <div className={`
+      relative overflow-hidden rounded-[2.5rem] transition-all duration-500 h-full
+      ${isDark 
+        ? 'bg-[#191919]/95 border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.5)]' 
+        : 'bg-white/60 backdrop-blur-xl border border-white/60 shadow-[0_8px_32px_0_rgba(31,38,135,0.05)]'
+      }
+      ${hoverEffect ? 'hover:-translate-y-1 hover:shadow-xl' : ''}
+      ${className}
+    `}>
+      <div className={`absolute inset-0 rounded-[2.5rem] pointer-events-none ring-1 ring-inset ${isDark ? 'ring-white/10' : 'ring-white/50'}`}></div>
+      <div className={`absolute inset-0 bg-gradient-to-b ${isDark ? 'from-white/5 to-transparent' : 'from-white/40 to-transparent'} opacity-50 pointer-events-none`}></div>
+      <div className="relative z-10 h-full">
+        {children}
+      </div>
+    </div>
+  );
+};
+
+const TripodIcon = ({ size = 24 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 2v8" />
+    <path d="m12 10-4 12" />
+    <path d="m12 10 4 12" />
+    <rect width="6" height="10" x="9" y="2" rx="1" />
+    <path d="M7 22h10" />
+  </svg>
+);
+
+const IllustrationCard = ({ src, alt, title }) => {
+  const [error, setError] = useState(false);
+  
+  return (
+    <LiquidCard className="p-4 md:p-6" hoverEffect={true}>
+      <div className="flex flex-col h-full">
+        <div className="relative w-full overflow-hidden rounded-3xl bg-white/10 mb-6">
+          {!error ? (
+            <img 
+              src={src} 
+              alt={alt} 
+              onError={() => setError(true)}
+              className="w-full h-auto object-contain block"
+            />
+          ) : (
+            <div className="flex aspect-video w-full flex-col items-center justify-center p-8 text-center bg-slate-100/50">
+              <ImageIcon className="mb-2 text-gray-400" size={32} />
+              <p className="text-[10px] text-gray-400 uppercase font-bold tracking-tighter">Illustration Unavailable</p>
+            </div>
+          )}
+        </div>
+        <div className="mt-auto">
+          <div className="flex items-center gap-3">
+            <div className="h-1 w-8 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-full"></div>
+            <p className="text-sm font-bold text-[#191919] uppercase tracking-widest">{title}</p>
+          </div>
+        </div>
+      </div>
+    </LiquidCard>
+  );
+};
+
+// --- Main App ---
+
+const App = () => {
+  const illustrations = [
+    { title: "The Golden Rule", src: "https://drcgouws.co.za/wp-content/uploads/2026/02/The-Golden-Rule.png" },
+    { title: "Master the Rear Camera", src: "https://drcgouws.co.za/wp-content/uploads/2026/02/Mastering-the-rear-camera.png" },
+    { title: "Unflattering Angles", src: "https://drcgouws.co.za/wp-content/uploads/2026/02/Unflattering-angles.png" },
+    { title: "The Pro-Check", src: "https://drcgouws.co.za/wp-content/uploads/2026/02/The-Pro-check.png" }
+  ];
+
+  const coachingTips = [
+    {
+      icon: <Heart className="text-pink-500" size={20} />,
+      title: "Own Your Unique Narrative",
+      description: "Don't shy away from parts of your story that feel 'too personal.' Your specific experiences and wins are your greatest competitive advantage over AI-generated filler."
+    },
+    {
+      icon: <Target className="text-purple-500" size={20} />,
+      title: "Consistency Is Not Just Visual",
+      description: "Colours create recognition, but 'vibe' creates trust. Ensure the way you speak in captions matches the way you speak in a DM or discovery call."
+    },
+    {
+      icon: <ShieldCheck className="text-cyan-500" size={20} />,
+      title: "Identify Your 'Non-Negotiables'",
+      description: "What does your brand stand against? Clear boundaries make content creation easier because you aren’t trying to please everyone—only your tribe."
+    },
+    {
+      icon: <Brain className="text-pink-500" size={20} />,
+      title: "Practice 'Active Reflection'",
+      description: "Before hitting post, ask: Does this sound like me, or who I think I should be? Peel back industry standards to find your actual voice."
+    },
+    {
+      icon: <CameraIcon className="text-purple-500" size={20} />,
+      title: "Document, Don't Just Create",
+      description: "Identity is found in the 'behind-the-scenes.' Share the messy desk, the research phase, or the morning coffee to humanise your strategy."
+    },
+    {
+      icon: <Zap className="text-cyan-500" size={20} />,
+      title: "The 80/20 Rule of Authority",
+      description: "80% value and expertise, 20% personality. This balance ensures you are seen as a professional while remaining someone people want to work with."
+    }
+  ];
+
+  return (
+    <div className="min-h-screen text-[#191919] font-sans selection:bg-pink-500/30 overflow-x-hidden relative scroll-smooth bg-slate-50">
+      <BackgroundOrbs />
+
+      <header className="relative z-10 pt-20 pb-10 px-6 text-center">
+        <div className="max-w-4xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/50 border border-white/80 text-xs font-bold uppercase tracking-widest mb-6">
+            <Sparkles size={14} className="text-purple-500" />
+            Prime Design Client Resource
+          </div>
+          <h1 className="text-5xl md:text-7xl font-black tracking-tight mb-6 leading-tight text-[#191919]">
+            The Professional <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-500 to-blue-500 animate-shimmer">
+              TikTok Lens
+            </span>
+          </h1>
+          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            A specialised guide to help you align your professional expertise with high-impact, brand-cohesive digital storytelling.
+          </p>
+        </div>
+      </header>
+
+      <main className="relative z-10 max-w-7xl mx-auto px-6 pb-6">
+        
+        {/* Section 1: Equipment */}
+        <section className="py-12">
+          <div className="flex items-center gap-4 mb-10">
+            <div className="w-12 h-12 rounded-2xl bg-cyan-400 flex items-center justify-center text-white shadow-lg shadow-cyan-200">
+              <Smartphone size={24} />
+            </div>
+            <h2 className="text-3xl font-bold text-[#191919]">The Essential Kit</h2>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <LiquidCard className="p-8 bg-gradient-to-br from-white/80 to-emerald-50/50">
+              <div className="mb-6 w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600">
+                <TripodIcon size={24} />
+              </div>
+              <h3 className="text-xl font-bold mb-3 tracking-tight">Gear Checklist</h3>
+              <div className="space-y-3">
+                <p className="text-gray-700 text-sm font-semibold leading-tight">What you'll need:</p>
+                <ul className="text-gray-600 text-xs space-y-2 list-none">
+                  <li className="flex items-start gap-2">
+                    <div className="mt-0.5 text-emerald-500"><CheckCircle size={12} /></div>
+                    Modern smartphone (Excellent Rear Camera)
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <div className="mt-0.5 text-emerald-500"><CheckCircle size={12} /></div>
+                    Mobile phone tripod
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <div className="mt-0.5 text-emerald-500"><CheckCircle size={12} /></div>
+                    Professional Ring light
+                  </li>
+                </ul>
+                <div className="pt-4 mt-4 border-t border-emerald-100/50">
+                  <p className="text-[10px] text-gray-500 italic leading-relaxed">
+                    Readily available on <span className="font-bold text-emerald-700">Takealot</span>. We will send you the correct links when you're ready.
+                  </p>
+                </div>
+              </div>
+            </LiquidCard>
+
+            <LiquidCard className="p-8">
+              <div className="mb-6 w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-cyan-600">
+                <Camera size={24} />
+              </div>
+              <h3 className="text-xl font-bold mb-3 tracking-tight text-[#191919]">Rear Lens Focus</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                The rear camera provides superior resolution and depth. Using it ensures your "Identity" is captured with professional clarity.
+              </p>
+            </LiquidCard>
+
+            <LiquidCard className="p-8">
+              <div className="mb-6 w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-pink-500">
+                <Sun size={24} />
+              </div>
+              <h3 className="text-xl font-bold mb-3 tracking-tight text-[#191919]">Strategic Light</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                Position your light behind the phone to eliminate shadows. This creates the "catchlight" in your eyes that builds immediate trust.
+              </p>
+            </LiquidCard>
+
+            <LiquidCard className="p-8">
+              <div className="mb-6 w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-purple-600">
+                <Mic size={24} />
+              </div>
+              <h3 className="text-xl font-bold mb-3 tracking-tight text-[#191919]">Audio Precision</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                Audio is half the battle. A lapel mic ensures your expertise is heard clearly without distracting background noise.
+              </p>
+            </LiquidCard>
+          </div>
+        </section>
+
+        {/* Section 2: Posture & Technique */}
+        <section className="py-12">
+          <div className="mb-12">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-100/50 text-cyan-700 text-[10px] font-bold uppercase tracking-widest mb-6 border border-cyan-200">
+              Visual Execution Blueprint
+            </div>
+            <h2 className="text-4xl font-black mb-6 text-[#191919]">Posture & Technique</h2>
+            <p className="text-gray-600 max-w-3xl text-lg leading-relaxed">
+              Your physical presence defines the quality of your message. Follow these visual blueprints to ensure your setup reflects your professional status.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {illustrations.map((ill, index) => (
+              <IllustrationCard 
+                key={index} 
+                src={ill.src} 
+                alt={ill.title} 
+                title={ill.title}
+              />
+            ))}
+          </div>
+
+          <LiquidCard isDark className="mt-12 p-10" hoverEffect={false}>
+            <div className="grid md:grid-cols-3 gap-8 text-[#191919]">
+              <div className="flex gap-4">
+                <div className="mt-1 text-cyan-400"><CheckCircle size={20} /></div>
+                <div>
+                  <h4 className="font-bold text-white mb-2 text-sm uppercase tracking-widest">The Eye-Level Rule</h4>
+                  <p className="text-gray-400 text-xs leading-relaxed">Align the lens with your gaze. This creates a "peer-to-peer" connection that feels authoritative.</p>
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <div className="mt-1 text-pink-400"><CheckCircle size={20} /></div>
+                <div>
+                  <h4 className="font-bold text-white mb-2 text-sm uppercase tracking-widest">Avoid Low Angles</h4>
+                  <p className="text-gray-400 text-xs leading-relaxed">Low angles can appear intimidating. Use your tripod to maintain a steady, level frame.</p>
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <div className="mt-1 text-purple-400"><CheckCircle size={20} /></div>
+                <div>
+                  <h4 className="font-bold text-white mb-2 text-sm uppercase tracking-widest">The Final Pro-Check</h4>
+                  <p className="text-gray-400 text-xs leading-relaxed">Check your background and lens contact. Looking at the camera dot is looking at your client.</p>
+                </div>
+              </div>
+            </div>
+          </LiquidCard>
+        </section>
+
+        {/* Section 3: Identity Coaching Tips */}
+        <section className="py-12">
+          <div className="flex items-center justify-between mb-12">
+            <div className="max-w-2xl">
+              <h2 className="text-4xl font-black mb-4 text-[#191919]">Identity Coaching</h2>
+              <p className="text-gray-600 text-lg">Strategy is the map, but you are the driver. Embody your brand voice with these core coaching principles.</p>
+            </div>
+            <div className="hidden md:block">
+              <div className="px-6 py-3 rounded-2xl bg-slate-900 text-white text-xs font-black uppercase tracking-widest border border-white/10">
+                Embodiment Phase
+              </div>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {coachingTips.map((tip, index) => (
+              <LiquidCard key={index} className="p-8 group">
+                <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  {tip.icon}
+                </div>
+                <h4 className="text-lg font-bold mb-3 tracking-tight group-hover:text-pink-600 transition-colors text-[#191919]">{tip.title}</h4>
+                <p className="text-gray-600 text-sm leading-relaxed">{tip.description}</p>
+              </LiquidCard>
+            ))}
+          </div>
+        </section>
+
+        {/* Section 4: Storytelling Framework */}
+        <section className="pt-12 pb-2">
+          <LiquidCard isDark className="p-10">
+            <div className="flex flex-col md:flex-row gap-12">
+              <div className="md:w-1/3">
+                <h3 className="text-3xl font-bold text-white mb-4 tracking-tight">The Storytelling Framework</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">Don't just record content—deploy your professional identity using our proven three-phase structure.</p>
+                <div className="mt-8 p-6 rounded-3xl bg-cyan-500/10 border border-cyan-500/20">
+                  <Lightbulb size={24} className="text-cyan-400 mb-4" />
+                  <h4 className="font-bold text-white text-sm mb-2 uppercase">Authenticity</h4>
+                  <p className="text-gray-400 text-xs leading-relaxed">Clients trust experts, not actors. Small imperfections make you more relatable and trustworthy.</p>
+                </div>
+              </div>
+              <div className="md:w-2/3 space-y-4">
+                <div className="p-6 rounded-3xl bg-white/5 border border-white/10 hover:border-pink-500/50 transition-colors">
+                  <p className="text-pink-400 font-bold text-sm mb-1 uppercase tracking-tighter italic">Phase 1: The Hook</p>
+                  <p className="text-gray-200 text-sm font-medium">Open with a specific problem or question your ideal client is facing today.</p>
+                </div>
+                <div className="p-6 rounded-3xl bg-white/5 border border-white/10 hover:border-purple-500/50 transition-colors">
+                  <p className="text-purple-400 font-bold text-sm mb-1 uppercase tracking-tighter italic">Phase 2: The Core Insight</p>
+                  <p className="text-gray-200 text-sm font-medium">Deliver your "Prime" solution. Keep it concise, high-value, and easy to digest.</p>
+                </div>
+                <div className="p-6 rounded-3xl bg-white/5 border border-white/10 hover:border-cyan-500/50 transition-colors">
+                  <p className="text-cyan-400 font-bold text-sm mb-1 uppercase tracking-tighter italic">Phase 3: The Conversion</p>
+                  <p className="text-gray-200 text-sm font-medium">Give them a clear next step. "Follow for more insights" or "Book a consultation."</p>
+                </div>
+              </div>
+            </div>
+          </LiquidCard>
+        </section>
+
+        {/* Prime Design Master Footer Card */}
+        <section className="py-6">
+          <LiquidCard className="p-0" hoverEffect={false}>
+            {/* Inner Wrapper for Layout */}
+            <div className="p-12 md:p-20 flex flex-col md:flex-row justify-between items-stretch gap-12 md:gap-24 h-full">
+              
+              {/* Left: The Blueprint Section */}
+              <div className="text-center md:text-left flex-1 flex flex-col justify-between gap-8 h-full">
+                <div className="space-y-4">
+                  <p className="text-[11px] text-[#191919]/40 font-bold uppercase tracking-[0.5em]">The Blueprint</p>
+                  <div className="h-1.5 w-20 bg-emerald-400 rounded-full mb-4 mx-auto md:mx-0"></div>
+                  <h4 className="text-[#191919] font-black text-4xl md:text-5xl uppercase tracking-tighter leading-[0.85]">
+                    Strategic Vision. <br />
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-500 to-blue-500 animate-shimmer">Technical Excellence.</span>
+                  </h4>
+                </div>
+                
+                {/* Justify-between pushes this to bottom */}
+                <div className="flex flex-wrap justify-center md:justify-start gap-3">
+                  <span className="px-5 py-2 bg-[#191919] text-white rounded-full text-[9px] font-black uppercase tracking-widest">Branding Cohesion</span>
+                  <span className="px-5 py-2 bg-[#191919] text-white rounded-full text-[9px] font-black uppercase tracking-widest">Medical SEO</span>
+                  <span className="px-5 py-2 bg-[#191919] text-white rounded-full text-[9px] font-black uppercase tracking-widest">Lead Gen</span>
+                </div>
+              </div>
+              
+              {/* Right: Prime Design Signature Block */}
+              <div className="text-center md:text-right flex-1 flex flex-col items-center md:items-end justify-end h-full">
+                <div className="mb-4">
+                  <p className="text-[10px] text-[#191919]/40 font-black uppercase tracking-[0.5em] mb-4">Developed by</p>
+                  <p className="text-[#191919] text-6xl md:text-7xl font-black uppercase tracking-tighter leading-none">PRIME DESIGN</p>
+                </div>
+                <div className="flex items-center h-[34px]"> {/* Matched height of pill box (9px text + 4px*2 padding + line height approx) */}
+                  <p className="text-purple-600 text-sm font-black uppercase tracking-[0.3em]">Niccy Bartlett • Founder</p>
+                </div>
+              </div>
+              
+            </div>
+          </LiquidCard>
+        </section>
+      </main>
+      
+      <footer className="relative z-10 pt-4 pb-10 border-t border-slate-200 text-center text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em]">
+        <p>© {new Date().getFullYear()} Prime Design. All Rights Reserved. Strategically crafted for those who value precision.</p>
+      </footer>
+    </div>
+  );
+};
+
+export default App;
